@@ -25,4 +25,7 @@ Why I Made This
 My hope is that:
 Someone will see this project
 and build something even better, different, or unexpected from it.
-![20260101_215526](https://github.com/user-attachments/assets/f014d6e9-1db7-42e1-9db6-4e71cf60ec59)
+
+![20260101_215526_down](https://github.com/user-attachments/assets/2e190042-6f5b-4294-9433-750cf2b17f9d)
+<img width="470" height="625" alt="bottom" src="https://github.com/user-attachments/assets/fc91584f-3971-4b52-a7dd-c6bb0319f696" />
+![20260102_124436_down](https://github.com/user-attachments/assets/54b57848-1262-4132-a30e-1ac3f4dab8ea)
