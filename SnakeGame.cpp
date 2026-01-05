@@ -5,11 +5,11 @@
 extern U8G2_SSD1306_128X64_NONAME_1_HW_I2C u8g2;
 
 // ================= 버튼 핀 =================
-#define BTN_UP     5
-#define BTN_DOWN   3
-#define BTN_LEFT   2
-#define BTN_RIGHT  4
-#define BTN_BACK 7
+#define BTN_UP     3
+#define BTN_DOWN   6
+#define BTN_LEFT   5
+#define BTN_RIGHT  7
+#define BTN_BACK 3
 
 // ================= 게임 상수 =================
 static const uint8_t CELL_SIZE = 3;
