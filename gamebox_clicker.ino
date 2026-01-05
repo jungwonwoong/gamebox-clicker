@@ -10,12 +10,12 @@
 U8G2_SSD1306_128X64_NONAME_1_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
 
 // ================= BUTTON =================
-#define BTN_UP     5
-#define BTN_DOWN   3
-#define BTN_LEFT   2
-#define BTN_RIGHT  4
-#define BTN_SELECT 6
-#define BTN_BACK   7
+#define BTN_UP     3
+#define BTN_DOWN   6
+#define BTN_LEFT   5
+#define BTN_RIGHT  7
+#define BTN_SELECT 2
+#define BTN_BACK   4
 
 // ================= STATE =================
 // enum AppState {
