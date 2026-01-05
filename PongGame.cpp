@@ -6,12 +6,12 @@
 extern U8G2_SSD1306_128X64_NONAME_1_HW_I2C u8g2;
 
 // ================= 버튼 핀 =================
-#define L_UP     6
-#define L_DOWN   2
-#define R_UP     7
-#define R_DOWN   4
-#define BTN_BACK 5
-#define RESET    3
+#define L_UP     2
+#define L_DOWN   5
+#define R_UP     4
+#define R_DOWN   7
+#define BTN_BACK 3
+#define RESET    6
 
 // ================= 상수 =================
 const unsigned long PADDLE_RATE = 64;
