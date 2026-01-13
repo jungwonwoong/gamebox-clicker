@@ -1,6 +1,7 @@
 #include "StairGame.h"
 #include <Arduino.h>
 #include "GameState.h"
+#include "Buttons.h"
 #include <EEPROM.h>
 #define EEPROM_ADDR_BEST_TIME 0   // 4바이트
 // ================= OLED (외부 공유) =================
@@ -26,8 +27,8 @@ static unsigned long bestTime = 0;
 enum StairDir { LEFT, RIGHT };
 // ===== 구조체 =====
 struct Step {
-  int x;
-  int y;
+  uint8_t x;
+  uint8_t y;
 };
 // ===== 게임상태 =====
 static Step steps[TOTAL_STEPS];
@@ -38,7 +39,7 @@ int leftAvail=0;
 int rightAvail=0;
 int runSlots=0;
 static bool gameOver;
-static unsigned long failTime;
+//static unsigned long failTime;
 static StairDir playerDir;
 // ===== 내부 함수 =====
 static void generateSteps();
@@ -49,8 +50,8 @@ static void scrollStepsDown();
 
 // ================= 초기화 =================
 void stairInit() {
-  pinMode(BTN_TURN, INPUT_PULLUP);
-  pinMode(BTN_CLIMB, INPUT_PULLUP);
+  // pinMode(BTN_LEFT, INPUT_PULLUP);
+  // pinMode(BTN_RIGHT, INPUT_PULLUP);
     // EEPROM에서 최고 기록 읽기
   EEPROM.get(EEPROM_ADDR_BEST_TIME, bestTime);
 
@@ -70,7 +71,7 @@ void stairGame() {
   }
   if (gameOver) {
     drawGame();
-    if (millis() - failTime > 500)
+    delay(500);
       resetGame();
     return;
   }
@@ -84,8 +85,8 @@ static void handleInput() {
   static bool lastTurn = HIGH;
   static bool lastClimb = HIGH;
 
-  bool turnNow = digitalRead(BTN_TURN);
-  bool climbNow = digitalRead(BTN_CLIMB);
+  bool turnNow = digitalRead(BTN_LEFT);
+  bool climbNow = digitalRead(BTN_RIGHT);
 
   int next = currentStep + 1;
   if (next >= TOTAL_STEPS) return;
@@ -94,6 +95,15 @@ static void handleInput() {
   if (lastTurn == HIGH && turnNow == LOW) {
     // 방향만 전환 (이동 X, 판정 X)
     playerDir = (playerDir == LEFT) ? RIGHT : LEFT;
+    StairDir stepDir = (steps[next].x > playerX) ? RIGHT : LEFT;
+    if (playerDir == stepDir) {
+      playerX = steps[next].x;
+      currentStep++;
+      scrollStepsDown();
+    } else {
+      scrollStepsDown();
+      gameOver = true;
+    }
   }
 
   // ================= 오르기 =================
@@ -104,8 +114,7 @@ static void handleInput() {
       startTime = millis();
     }
     // 다음 계단이 어느 쪽인지 판단
-    StairDir stepDir =
-      (steps[next].x > playerX) ? RIGHT : LEFT;
+    StairDir stepDir = (steps[next].x > playerX) ? RIGHT : LEFT;
 
     // 방향이 맞으면 이동
     if (playerDir == stepDir) {
@@ -124,12 +133,12 @@ static void handleInput() {
         }
 
         gameOver = true;
-        failTime = millis();
+       // failTime = millis();
       }
     } else {
       // 실패 → 떨어짐
       gameOver = true;
-      failTime = millis();
+     // failTime = millis();
     }
   }
 
@@ -146,7 +155,7 @@ static void scrollStepsDown() {
 
 // ================= 그리기 =================
 static void drawGame() {
-  u8g2.setFont(u8g2_font_5x8_tf);
+  u8g2.setFont(u8g2_font_6x12_tf);
   u8g2.firstPage();
   do {
     // 계단
@@ -179,6 +188,7 @@ static void drawGame() {
   unsigned long secBest = bestTime / 100;
 
   // 최고 기록
+  u8g2.setFont(u8g2_font_6x12_tr);
   u8g2.setCursor(0, 64);
   u8g2.print("PR:");
   u8g2.print(secBest);
@@ -188,7 +198,19 @@ static void drawGame() {
   u8g2.setCursor(110, 64);
   u8g2.print(secNow);
   u8g2.print("s");
+
+  if(gameOver) {
+    u8g2.setFont(u8g2_font_ncenB14_tr);   // 큰 폰트 선택
+    u8g2.setCursor(15, 20);
+    if (currentStep >= TOTAL_STEPS - 1) {
+       u8g2.print(" CLEAR !");
+    } else {
+    u8g2.print("You Died!");
+    }
+    
+  }
   } while (u8g2.nextPage());
+
   
 }
 

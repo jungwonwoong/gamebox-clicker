@@ -1,17 +1,18 @@
 #include "PongGame.h"
 #include <Arduino.h>
 #include "GameState.h"
+#include "Buttons.h"
 
 // ================= OLED =================
 extern U8G2_SSD1306_128X64_NONAME_1_HW_I2C u8g2;
 
-// ================= 버튼 핀 =================
-#define L_UP     2
-#define L_DOWN   5
-#define R_UP     4
-#define R_DOWN   7
-#define BTN_BACK 3
-#define RESET    6
+// // ================= 버튼 핀 =================
+// #define L_UP     2
+// #define L_DOWN   5
+// #define R_UP     4
+// #define R_DOWN   7
+// #define BTN_BACK 3
+// #define RESET    6
 
 // ================= 상수 =================
 const unsigned long PADDLE_RATE = 64;
@@ -33,7 +34,7 @@ static uint16_t rally_count = 0;
 static uint8_t ball_x = 53, ball_y = 26;
 static int8_t  ball_dir_x = 1, ball_dir_y = 1;
 static uint8_t ball_size;
-static unsigned long ball_rate;
+static unsigned long ball_rate =24;
 
 // ---- 패들 ----
 static uint8_t paddle_height;
@@ -51,12 +52,12 @@ static void updateDifficultyByRally();
 // ================= 초기화 =================
 void pongInit()
 {
-  pinMode(L_UP, INPUT_PULLUP);
-  pinMode(L_DOWN, INPUT_PULLUP);
-  pinMode(R_UP, INPUT_PULLUP);
-  pinMode(R_DOWN, INPUT_PULLUP);
-  pinMode(BTN_BACK, INPUT_PULLUP);
-  pinMode(RESET, INPUT_PULLUP);
+  pinMode(BTN_UP,     INPUT_PULLUP);
+  pinMode(BTN_DOWN,   INPUT_PULLUP);
+  pinMode(BTN_LEFT,   INPUT_PULLUP);
+  pinMode(BTN_RIGHT,  INPUT_PULLUP);
+  pinMode(BTN_SELECT, INPUT_PULLUP);
+  pinMode(BTN_BACK,   INPUT_PULLUP);
 
   ball_update = millis();
   paddle_update = ball_update;
@@ -68,13 +69,13 @@ void pong()
 {
   unsigned long time = millis();
 
-  if (digitalRead(BTN_BACK) == LOW) {
+  if (digitalRead(BTN_DOWN) == LOW) {
     delay(200);
     appState = STATE_MENU;
     return;
   }
 
-  if (digitalRead(RESET) == LOW) {
+  if (digitalRead(BTN_UP) == LOW) {
     delay(200);
     resetGame();
     return;
@@ -135,11 +136,11 @@ void pong()
   {
     paddle_update += PADDLE_RATE;
 
-    if (digitalRead(L_UP) == LOW)   mcu_y--;
-    if (digitalRead(L_DOWN) == LOW) mcu_y++;
+    if (digitalRead(BTN_SELECT) == LOW)   mcu_y--;
+    if (digitalRead(BTN_LEFT) == LOW) mcu_y++;
 
-    if (digitalRead(R_UP) == LOW)   player_y--;
-    if (digitalRead(R_DOWN) == LOW) player_y++;
+    if (digitalRead(BTN_BACK) == LOW)   player_y--;
+    if (digitalRead(BTN_RIGHT) == LOW) player_y++;
 
     if (mcu_y < 1) mcu_y = 1;
     if (mcu_y + paddle_height > 53)
@@ -203,7 +204,7 @@ static void resetGame()
   ball_dir_y = 1;
 
   ball_size = 4;
-  ball_rate = 12;
+  ball_rate = 0;
 
   paddle_height = 10;
 

@@ -1,6 +1,7 @@
 #include "SnakeGame.h"
 #include <Arduino.h>
 #include "GameState.h"
+#include "Buttons.h"
 // ================= OLED (외부 공유) =================
 extern U8G2_SSD1306_128X64_NONAME_1_HW_I2C u8g2;
 
@@ -9,7 +10,7 @@ extern U8G2_SSD1306_128X64_NONAME_1_HW_I2C u8g2;
 #define BTN_DOWN   6
 #define BTN_LEFT   5
 #define BTN_RIGHT  7
-#define BTN_BACK 3
+#define BTN_BACK 4
 
 // ================= 게임 상수 =================
 static const uint8_t CELL_SIZE = 3;
@@ -18,8 +19,8 @@ static const uint8_t GRID_W    = 42;   // 128 / 4 ≈ 31
 static const uint8_t GRID_H    = 21;   // 64 / 4 ≈ 19
 
 // ================= 게임 상태 =================
-static int snake_x[MAX_LEN];
-static int snake_y[MAX_LEN];
+static uint8_t snake_x[MAX_LEN];
+static uint8_t snake_y[MAX_LEN];
 static int snake_length;
 
 static int food_x, food_y;
@@ -32,6 +33,7 @@ static unsigned int game_speed;
 static void spawnFood();
 static void readDirection();
 static void moveSnake();
+static bool hitSelf();
 static bool hitWall();
 static bool eatFood();
 static void drawGame();
@@ -46,7 +48,7 @@ void snakeInit()
   snake_x[2] = 13; snake_y[2] = 10;
 
   direction = SNAKE_RIGHT;
-  game_speed = 180;
+  game_speed = 120;
   lastUpdate = millis();
 
   randomSeed(analogRead(A6));
@@ -73,7 +75,11 @@ void snake()
     snakeInit();   // 충돌 시 리셋
     return;
   }
-
+if (hitWall() || hitSelf())
+{
+  snakeInit();   // 게임 종료 → 리셋
+  return;
+}
   if (eatFood())
   {
     if (game_speed > 60)
@@ -112,6 +118,18 @@ static void moveSnake()
   if (direction == SNAKE_DOWN)  snake_y[0]++;
   if (direction == SNAKE_LEFT)  snake_x[0]--;
   if (direction == SNAKE_RIGHT) snake_x[0]++;
+}
+static bool hitSelf()
+{
+  for (int i = 1; i < snake_length; i++)
+  {
+    if (snake_x[0] == snake_x[i] &&
+        snake_y[0] == snake_y[i])
+    {
+      return true;
+    }
+  }
+  return false;
 }
 
 // ================= 충돌 =================

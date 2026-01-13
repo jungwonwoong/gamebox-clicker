@@ -5,10 +5,10 @@
 #include <U8g2lib.h>
 
 
-// 버튼 핀
-#define BTN_TURN 5    // 방향 전환
-#define BTN_CLIMB 7   // 오르기
-#define BTN_BACK   2   // 메뉴로 돌아가기
+// // 버튼 핀
+// #define BTN_TURN 5    // 방향 전환
+// #define BTN_CLIMB 7   // 오르기
+// #define BTN_BACK   2   // 메뉴로 돌아가기
 
 // 방향
 // enum StairDir {
