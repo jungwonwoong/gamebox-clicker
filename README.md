@@ -25,7 +25,7 @@ Why I Made This
 My hope is that:
 Someone will see this project
 and build something even better, different, or unexpected from it.
-
+https://stringphoto.kr/indexgameboxmaking.html
 https://www.tinkercad.com/things/khLDLkMv2Sm-gamebox-clicker
 ![20260101_215526_down](https://github.com/user-attachments/assets/2e190042-6f5b-4294-9433-750cf2b17f9d)
 
